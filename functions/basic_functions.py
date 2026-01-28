@@ -13,7 +13,7 @@ from data.security import generate_id
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
 
-
+#Inicia el bot
 async def start(update:Update, context):
 
     chat_id = update.effective_chat.id #Obtiene el id del chat

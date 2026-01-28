@@ -6,6 +6,7 @@ from telegram.ext import CallbackContext, ConversationHandler
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
 import data.persistence as persistence
+from data.security import generate_id
 
 
 #TASK FUNCTIONS
@@ -15,23 +16,30 @@ import data.persistence as persistence
 async def add_task(update:Update, context):
     chat_id = update.effective_chat.id
 
-    #If users only write /addtask without task
+    user_id = generate_id(chat_id) #Obtener el id del usuario
+
+    #Si el usuario solo escribe el comando '/addtask' sin la tarea, se le indica que debe escribir un nombre para la misma
     if not context.args:
         await context.bot.send_message(chat_id=chat_id, text=f"Debes escribir el comando y el nombre de la tarea")
         return
 
-    task = " ".join(context.args).lower()
+    task = " ".join(context.args).lower() #Se almacena en minúsculas 
 
-    if chat_id in persistence.TASKLIST:
 
-        user_tasklist = persistence.TASKLIST[chat_id]["pending_tasks"]
+    #Comprobar que el usuario existe en el sistema
+    if user_id in persistence.TASKLIST:
+
+        #Si la tarea ya existe
+        user_tasklist = persistence.TASKLIST[user_id]["pending_tasks"]
         if task in user_tasklist:
             await context.bot.send_message(chat_id=chat_id, text=f"{task.capitalize()} ya existe como tarea pendiente")
 
+        #Si la tarea no existe, se crea y se añade a la lista
         else:
-            persistence.TASKLIST[chat_id]["pending_tasks"].append(task)
+            persistence.TASKLIST[user_id]["pending_tasks"].append(task)
             await context.bot.send_message(chat_id=chat_id, text=f"{task.capitalize()} añadido como tarea pendiente")
     
+    #Si el usuario no existe
     else:
        await context.bot.send_message(chat_id=chat_id, text="Usa el comando /start primero")
 
