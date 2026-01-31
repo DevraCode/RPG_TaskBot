@@ -39,6 +39,7 @@ async def start(update:Update, context):
         persistence.CHARACTER[user_id] = {
              'character_id': "",
              'character_name':user,
+             'charatcer_img': "",
              'character_type':"",
              'character_exp': 0,
              'character_level': 0
