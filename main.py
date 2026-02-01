@@ -8,14 +8,14 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ConversationHandler
 #---------------------------------------------------------------------------------------------------
 import data.persistence as persistence
 from data.time_zone import ZONE, DIAS
-from functions.basic_functions import start, delete_user, send_animation
+from functions.basic_functions import start, delete_user
 from functions.task_functions import TASK_NAME, DELETE, COMPLETE
 from functions.task_functions import new_task, add_task, show_pending_tasks, delete_task, delete_button, cancel, complete_task, complete_button
 from functions.reminders_functions import NAME,DAY,HOUR,MINUTE
 from functions.reminders_functions import reminder_name, get_reminder_name, get_day_frequency_buttons, get_hour, get_minute, save_and_finish
 from functions.menu import menu
 
-from functions.characters_functions import male_mage
+from functions.characters_data import male_mage
 
 #BOT TOKEN
 #---------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ def main():
     app.add_handler(CommandHandler("deluser", delete_user))
 
 
-    #app.add_handler(CommandHandler("mage", male_mage))
+    app.add_handler(CommandHandler("mage", male_mage))
 
 
 

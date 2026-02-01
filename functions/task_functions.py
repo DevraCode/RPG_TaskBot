@@ -185,17 +185,18 @@ COMPLETE = range(1)
 async def complete_task(update:Update, context:CallbackContext):
 
     chat_id = update.effective_chat.id
+    user_id = generate_id(chat_id)
 
-    if chat_id not in persistence.TASKLIST or not persistence.TASKLIST[chat_id].get("pending_tasks"):
+    if user_id not in persistence.TASKLIST or not persistence.TASKLIST[user_id].get("pending_tasks"):
         await update.message.reply_text("¡No tienes tareas pendientes para completar!")
         return ConversationHandler.END 
 
     else:
-        user_tasklist = persistence.TASKLIST[chat_id]["pending_tasks"]
+        user_tasklist = persistence.TASKLIST[user_id]["pending_tasks"]
         keyboard = []
         
-        #Create a row for each task
-        for index,task in enumerate(user_tasklist):
+        #Crear una nueva fila para cada tarea
+        for task in user_tasklist:
                 keyboard.append([InlineKeyboardButton(f"{task.capitalize()}", callback_data=task)])
 
         
@@ -208,16 +209,18 @@ async def complete_task(update:Update, context:CallbackContext):
 
 async def complete_button(update:Update, context:CallbackContext):
     chat_id = update.effective_chat.id
+    user_id = generate_id(chat_id)
+
     query = update.callback_query
     await query.answer()
 
     data = query.data
 
-    user_tasklist = persistence.TASKLIST[chat_id]["pending_tasks"]
-    user_completed_tasks = persistence.TASKLIST[chat_id]["completed_tasks"]
+    user_tasklist = persistence.TASKLIST[user_id]["pending_tasks"]
+    user_completed_tasks = persistence.TASKLIST[user_id]["completed_tasks"]
     
 
-    if chat_id in persistence.TASKLIST:
+    if user_id in persistence.TASKLIST:
 
         if data == "CANCEL_DELETE":
             await query.edit_message_text("Operación cancelada.")
