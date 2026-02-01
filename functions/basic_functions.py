@@ -36,16 +36,6 @@ async def start(update:Update, context):
             "completed_tasks": []
         }
 
-        persistence.CHARACTER[user_id] = {
-             'character_id': "",
-             'character_name':user,
-             'charatcer_img': "",
-             'character_type':"",
-             'character_exp': 0,
-             'character_level': 0
-        }
-
-        
         await context.bot.send_message(chat_id = chat_id, text=f"Hola, {user}, utiliza el comando /help para ver una lista de comandos disponibles")
         print(f"DEBUG: Nuevo usuario registrado: {user}")
 
@@ -90,7 +80,3 @@ async def delete_user(update:Update, context):
 
 
     #---------------------------------------------------------------------------------------------------
-
-async def send_animation(update:Update, context):
-     chat_id = update.effective_chat.id
-     await context.bot.send_sticker(chat_id = chat_id, sticker = "assets/characters/mage/female_mage_01.webm")
