@@ -13,18 +13,23 @@ from functions.characters_data import male_warrior_01, female_warrior_01, male_m
 #from functions.characters_data import male_warrior, female_warrior, male_mage, female_mage
 
 
-
-# 1. Asegúrate de que estos sean los IDs (Strings)
+#Lista de personajes
 character_list = [male_warrior_01, female_warrior_01, male_mage_01, female_mage_01]
 
+#Muestra el primer personaje de la lista, y a partir de ahi, los demás
 async def show_characters(update: Update, context: CallbackContext):
-    # Usamos effective_chat para evitar errores de NoneType
+    
     chat_id = update.effective_chat.id
-    
-    # ... aquí tu lógica de comprobación de usuario ...
+    user_id = generate_id(chat_id)
 
-    index = 0  # Empezamos por el primero
+    #Comprobamos que exista el usuario
+    if user_id not in persistence.REGISTERED_USERS:
+        context.bot.send_message(chat_id=chat_id, text=f"Debes estar registrado primero")
     
+    
+    index = 0  #La posición del primer personaje de la lista
+    
+    #Botones de Anterior, Siguiente y Seleccionar
     keyboard = [
         [
             InlineKeyboardButton("Anterior", callback_data=f"PREV_{index}"),
@@ -33,38 +38,41 @@ async def show_characters(update: Update, context: CallbackContext):
         [InlineKeyboardButton("Seleccionar", callback_data=f"SELECT_{index}")]
     ]
     
-    # MANDAMOS EL STICKER CON EL TECLADO
+    #Enviamos el primer personaje de la galería
     await context.bot.send_sticker(
         chat_id=chat_id,
         sticker=character_list[index],
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
+
+#Manejador de botones
 async def characters_buttons(update: Update, context: CallbackContext):
     query = update.callback_query
-    await query.answer() # Quita el reloj de arena del botón
+    await query.answer() 
 
-    # SEPARAMOS LA ACCIÓN DEL ÍNDICE
-    # Ejemplo: "NEXT_0" se convierte en ["NEXT", "0"]
-    data = query.data.split("_")
-    accion = data[0]
-    indice_actual = int(data[1])
+    
+    data = query.data.split("_") #Split para que separe el data y obtenga NEXT O PREV con el índice separado ([NEXT, 0] [PREV, 0])
+    accion = data[0] #Primera posición de los data obtenidos, o sea, NEXT o PREV
+    indice_actual = int(data[1]) #Se convierte a int la segunda posición del data obtenido, o sea 0, que se guardó en la variable index de la función anterior
 
-    # CALCULAMOS EL NUEVO ÍNDICE
+
+
+    #Calculamos los índices
     if accion == "NEXT":
-        nuevo_indice = (indice_actual + 1) % len(character_list)
+        nuevo_indice = (indice_actual + 1) % len(character_list) #Pasará a NEXT_1, NEXT_2...etc. Y pasa al siguiente personaje
     elif accion == "PREV":
-        nuevo_indice = (indice_actual - 1) % len(character_list)
+        nuevo_indice = (indice_actual - 1) % len(character_list)#Pasará a PREV_1, PREV_2... Y pasa al anterior personaje
     else:
-        # Lógica para SELECT
-        await query.edit_message_caption(caption="¡Personaje elegido!") # O lo que prefieras
+        
+        await query.edit_message_caption(caption="¡Personaje elegido!")
         return
 
-    # LA CLAVE: BORRAR Y ENVIAR EL SIGUIENTE
+    #Borra el Sticker actual y muestra el siguiente, dando la sensación de dinamismo
     try:
         await query.message.delete()
         
-        # Creamos el nuevo teclado con el nuevo número
+        #Creamos el nuevo teclado con el nuevo índice que mostrará al siguiente o al anterior personaje
         nuevo_keyboard = [
             [
                 InlineKeyboardButton("Anterior", callback_data=f"PREV_{nuevo_indice}"),
@@ -73,6 +81,7 @@ async def characters_buttons(update: Update, context: CallbackContext):
             [InlineKeyboardButton("Seleccionar", callback_data=f"SELECT_{nuevo_indice}")]
         ]
 
+        #Se envía el nuevo personaje
         await context.bot.send_sticker(
             chat_id=query.message.chat_id,
             sticker=character_list[nuevo_indice],
