@@ -3,6 +3,7 @@ from telegram import BotCommand
 async def menu(application):
     commands = [
         BotCommand("start", "Registrarse en el sistema"),
+        BotCommand("characters", "Elige a un personaje"),
         BotCommand("deluser", "Elimina tu usuario del sistema"),
         BotCommand("addtask", "Añade una nueva tarea"),
         BotCommand("showtasks", "Lista de tareas pendientes"),

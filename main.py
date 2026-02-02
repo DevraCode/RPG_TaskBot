@@ -45,8 +45,8 @@ def main():
     app.add_handler(CommandHandler("showtasks", show_pending_tasks))
     app.add_handler(CommandHandler("deluser", delete_user))
 
-
-    app.add_handler(CommandHandler("mage", show_characters))
+    
+    app.add_handler(CommandHandler("characters", show_characters))
     app.add_handler(CallbackQueryHandler(characters_buttons, pattern="^(NEXT_|PREV_|SELECT_)"))
 
 

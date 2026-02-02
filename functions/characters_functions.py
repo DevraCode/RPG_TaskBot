@@ -1,9 +1,6 @@
-
-
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMedia
 from telegram.ext import CallbackContext, ConversationHandler
 
-from telegram.constants import ParseMode
 
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
@@ -57,7 +54,6 @@ async def characters_buttons(update: Update, context: CallbackContext):
     indice_actual = int(data[1]) #Se convierte a int la segunda posición del data obtenido, o sea 0, que se guardó en la variable index de la función anterior
 
 
-
     #Calculamos los índices
     if accion == "NEXT":
         nuevo_indice = (indice_actual + 1) % len(character_list) #Pasará a NEXT_1, NEXT_2...etc. Y pasa al siguiente personaje
@@ -65,27 +61,26 @@ async def characters_buttons(update: Update, context: CallbackContext):
         nuevo_indice = (indice_actual - 1) % len(character_list)#Pasará a PREV_1, PREV_2... Y pasa al anterior personaje
     else:
         
-        await query.edit_message_caption(caption="¡Personaje elegido!")
+        #await query.edit_message_caption(caption="¡Personaje elegido!")
         return
 
     #Borra el Sticker actual y muestra el siguiente, dando la sensación de dinamismo
-    try:
-        await query.message.delete()
+    
+    await query.message.delete()
         
-        #Creamos el nuevo teclado con el nuevo índice que mostrará al siguiente o al anterior personaje
-        nuevo_keyboard = [
-            [
-                InlineKeyboardButton("Anterior", callback_data=f"PREV_{nuevo_indice}"),
-                InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{nuevo_indice}")
-            ],
+    #Creamos el nuevo teclado con el nuevo índice que mostrará al siguiente o al anterior personaje
+    nuevo_keyboard = [
+        [
+            InlineKeyboardButton("Anterior", callback_data=f"PREV_{nuevo_indice}"),
+            InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{nuevo_indice}")
+        ],
             [InlineKeyboardButton("Seleccionar", callback_data=f"SELECT_{nuevo_indice}")]
         ]
 
-        #Se envía el nuevo personaje
-        await context.bot.send_sticker(
-            chat_id=query.message.chat_id,
-            sticker=character_list[nuevo_indice],
-            reply_markup=InlineKeyboardMarkup(nuevo_keyboard)
+    #Se envía el nuevo personaje
+    await context.bot.send_sticker(
+        chat_id=query.message.chat_id,
+        sticker=character_list[nuevo_indice],
+        reply_markup=InlineKeyboardMarkup(nuevo_keyboard)
         )
-    except Exception as e:
-        print(f"Error al navegar: {e}")
+    
