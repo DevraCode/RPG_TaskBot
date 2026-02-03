@@ -21,26 +21,28 @@ async def show_characters(update: Update, context: CallbackContext):
 
     #Comprobamos que exista el usuario
     if user_id not in persistence.REGISTERED_USERS:
-        context.bot.send_message(chat_id=chat_id, text=f"Debes estar registrado primero")
+        await context.bot.send_message(chat_id=chat_id, text=f"Debes estar registrado primero")
     
+
+    #Si el usuario existe
+    else:
+        index = 0  #La posición del primer personaje de la lista
     
-    index = 0  #La posición del primer personaje de la lista
+        #Botones de Anterior, Siguiente y Seleccionar
+        keyboard = [
+            [
+                InlineKeyboardButton("Anterior", callback_data=f"PREV_{index}"),
+                InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{index}")
+            ],
+            [InlineKeyboardButton("Seleccionar", callback_data=f"SELECT_{index}")]
+        ]
     
-    #Botones de Anterior, Siguiente y Seleccionar
-    keyboard = [
-        [
-            InlineKeyboardButton("Anterior", callback_data=f"PREV_{index}"),
-            InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{index}")
-        ],
-        [InlineKeyboardButton("Seleccionar", callback_data=f"SELECT_{index}")]
-    ]
-    
-    #Enviamos el primer personaje de la galería
-    await context.bot.send_sticker(
-        chat_id=chat_id,
-        sticker=character_list[index],
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+        #Enviamos el primer personaje de la galería
+        await context.bot.send_sticker(
+            chat_id=chat_id,
+            sticker=character_list[index],
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
 
 
 #Manejador de botones

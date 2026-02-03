@@ -105,6 +105,6 @@ def main():
 #BOT RUNNING
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
-#If scripts's name match with 'main', bot starts
+#Si el nombre del script coincide con main comienza el bot
 if __name__ == "__main__":
     main()
