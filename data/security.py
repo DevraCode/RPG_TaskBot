@@ -1,7 +1,16 @@
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMedia
+from telegram.ext import CallbackContext, ConversationHandler
+
+
+
 import os
 import hashlib
 
 from dotenv import load_dotenv
+from functools import wraps
+
+
+import data.persistence as persistence
 
 """
 Por seguridad, se encriptan los datos de los usuarios. De esta forma, se refuerza la seguridad del bot
@@ -16,3 +25,16 @@ def generate_id(chat_id):
     id = hashlib.sha256(bin_id).hexdigest()
 
     return id[:12]
+
+
+def verify_user(func):
+    @wraps(func)
+    async def verify(update:Update, context:CallbackContext, *args, **kwargs):
+        chat_id = update.effective_chat.id
+        user_id = generate_id(chat_id)
+
+        if user_id not in persistence.REGISTERED_USERS:
+            await context.bot.send_message(chat_id=chat_id, text=f"Debes ser usuario registrado")
+            return
+        return await func(update,context,*args,**kwargs)
+    return verify
