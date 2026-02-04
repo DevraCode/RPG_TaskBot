@@ -23,7 +23,7 @@ character_select = {
     female_mage_01: female_mage
 }
 
-characters_names = ["Guerrero", "Guerrera", "Mago", "Maga"]
+character_type = ["Guerrero", "Guerrera", "Mago", "Maga"]
 
 #Muestra el primer personaje de la lista, y a partir de ahi, los demás
 @verify_user
@@ -32,9 +32,11 @@ async def show_characters(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     
     index = 0  #La posición del primer personaje de la lista
+
     
     #Botones de Anterior, Siguiente y Seleccionar
     keyboard = [
+            [InlineKeyboardButton(character_type[index], callback_data="ignore")],
             [
                 InlineKeyboardButton("Anterior", callback_data=f"PREV_{index}"),
                 InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{index}")
@@ -53,6 +55,10 @@ async def show_characters(update: Update, context: CallbackContext):
 #Manejador de botones
 async def characters_buttons(update: Update, context: CallbackContext):
     query = update.callback_query
+    if query.data == "ignore":
+        await query.answer()
+        return
+
     await query.answer() 
 
     
@@ -82,6 +88,7 @@ async def characters_buttons(update: Update, context: CallbackContext):
         
     #Creamos el nuevo teclado con el nuevo índice que mostrará al siguiente o al anterior personaje
     nuevo_keyboard = [
+        [InlineKeyboardButton(character_type[nuevo_indice], callback_data="ignore")],
         [
             InlineKeyboardButton("Anterior", callback_data=f"PREV_{nuevo_indice}"),
             InlineKeyboardButton("Siguiente", callback_data=f"NEXT_{nuevo_indice}")
@@ -95,4 +102,5 @@ async def characters_buttons(update: Update, context: CallbackContext):
         sticker=character_list[nuevo_indice],
         reply_markup=InlineKeyboardMarkup(nuevo_keyboard)
         )
+    
     
