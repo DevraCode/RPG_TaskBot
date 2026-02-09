@@ -34,7 +34,7 @@ Al abrir el chat con el bot, click en Iniciar y se abrirá automáticamente el c
 ![Telegram_bot2_edited](https://github.com/user-attachments/assets/905aeb3a-c74e-4e91-ab9e-e5f22303c876)
 
 
-Y el bot responderá con un mensaje de bienvenida al usuario, en el que saludará al mismo (mi nombre de usuario está censurado en la imagen) y le explicará brevemente el funcionamiento del bot.
+Y el bot responderá con un mensaje de bienvenida al usuario, en el que saludará al mismo (mi nombre de usuario está censurado en la imagen) y le explicará brevemente como elegir un personaje.
 
 ![Telegram_bot3_edited_2](https://github.com/user-attachments/assets/69a6a570-c33c-435e-add4-6093588cefed)
 
