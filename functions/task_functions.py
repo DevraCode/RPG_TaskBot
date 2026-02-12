@@ -200,9 +200,8 @@ async def complete_task(update:Update, context:CallbackContext):
         return COMPLETE
     
 
-def auxiliar_exp_button(button: str -> InlineKeyboardMarkup):
+def auxiliar_exp_button(button: str) -> InlineKeyboardMarkup:
     pass
-
 
 async def complete_button(update:Update, context:CallbackContext):
     chat_id = update.effective_chat.id
