@@ -200,6 +200,8 @@ async def complete_task(update:Update, context:CallbackContext):
         return COMPLETE
     
 
+def auxiliar_exp_button(button: str -> InlineKeyboardMarkup):
+    pass
 
 
 async def complete_button(update:Update, context:CallbackContext):
@@ -213,7 +215,7 @@ async def complete_button(update:Update, context:CallbackContext):
 
     user_tasklist = persistence.TASKLIST[user_id]["pending_tasks"]
     user_completed_tasks = persistence.TASKLIST[user_id]["completed_tasks"]
-
+    
 
     if user_id in persistence.TASKLIST:
 
@@ -225,10 +227,10 @@ async def complete_button(update:Update, context:CallbackContext):
             user_tasklist.remove(data)
             user_completed_tasks.append(data)
             character_exp_up(user_id)
+            
 
-        
         if not user_tasklist:
-            await query.edit_message_text("✅ Ya no quedan tareas pendientes para completar")
+            await query.edit_message_text(f"✅ Ya no quedan tareas pendientes para completar")
             return ConversationHandler.END
 
         keyboard = []
